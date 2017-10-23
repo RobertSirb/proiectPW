@@ -11,7 +11,7 @@ def getIndex(freq):
     while (RANGE[i] < freq):
         i+=1
     return i
-FUZ_FACTOR=2
+FUZ_FACTOR=1
 def hashMeu(p1, p2, p3, p4) :
     return (p4 - (p4 % FUZ_FACTOR)) * 100000000 + (p3 - (p3 % FUZ_FACTOR))* 100000 + (p2 - (p2 % FUZ_FACTOR)) * 100 + (p1 - (p1 % FUZ_FACTOR))
 def absMeu(lst):
@@ -28,7 +28,7 @@ def main(result):
     hashuri=[]
     for t in range(len(result)):
         for freq in range(40,300):
-            mag = math.log(absMeu(result[t][freq]) + 1);
+            mag = math.log(abs(result[t][freq]) + 1);
     
             index = getIndex(freq);
     
@@ -38,5 +38,9 @@ def main(result):
         h = hashMeu(points[t][0], points[t][1], points[t][2], points[t][3])
         hashuri.append(h)
     print hashuri
-
+    f1=open("hash3.txt","w")
+    for it in hashuri:
+        f1.write(str(it)+" ")
+    #f1.write(hashuri)
+    f1.close()
 

@@ -5,7 +5,7 @@ Created on Oct 20, 2017
 '''
 import matplotlib.pyplot as plt
 from scipy.io import wavfile as wav
-from scipy.fftpack  import fft
+from scipy.fftpack  import fft ,rfft
 import numpy as np
 import wave
 import struct
@@ -62,33 +62,38 @@ def fft2(x):
         
     return y
 
-
-
+chunk = 2048
+window = np.blackman(chunk)
 oct2=wave.open("bass.wav")
 print oct2.getparams()
 data2=oct2.getnframes()
 data2=oct2.readframes(data2)
-print len(data2)
-audio  = []
-for it in data2:
-    audio.append(it)
-totalSize = len(audio)
-chunkSize=4*1024
-nrChunks = totalSize/chunkSize;
-#nrChunks = 20
-print nrChunks
-result = [];
-
-for j in range(nrChunks):
-    complexArray=[]
-    for i in range(chunkSize):
-        nr=struct.unpack("b",audio[(j*chunkSize)+i])
-        nr=int(nr[0])
-        complexArray.append([nr, 0])
-    result.append(fft(complexArray))
-
-#print result[0][299]
-#plt.plot(result[0])
-#plt.show()
-oct2.close()
-GenerareHash.main(result)
+freq,data2=wav.read("bass.wav")
+data2=data2[:, 1]
+print data2,len(data2)
+k=0
+t=160
+while k<t:
+    data=data2[k*chunk:(k+1)*chunk]
+    #plt.plot(data)
+    #plt.show()
+    data=data*window
+    #plt.plot(data)
+    #plt.show()
+    fftData=abs(np.fft.rfft(data))**2
+    #plt.plot(fftData)
+    #plt.show()
+    which = fftData[1:].argmax() + 1
+    # use quadratic interpolation around the max
+    if which != len(fftData)-1:
+        y0,y1,y2 = np.log(fftData[which-1:which+2:])
+        #print fftData[which-1:which+2:]
+        x1 = (y2 - y0) * .5 / (2 * y1 - y2 - y0)
+        # find the frequency and output it
+        thefreq = (which+x1)*freq/chunk
+        print "The freq is %f Hz." % (thefreq)
+    else:
+        thefreq = which*freq/chunk
+        print "The freq is %f Hz." % (thefreq)
+    k=k+1
+    # read some more data

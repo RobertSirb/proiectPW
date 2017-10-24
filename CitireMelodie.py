@@ -40,7 +40,7 @@ def fft2(x):
     #pause()
     even = []
     for k in range(N/2):
-        even.append(x[2 * k])
+        even.append(x[2 * k]) 
     
     q = fft(even)
 

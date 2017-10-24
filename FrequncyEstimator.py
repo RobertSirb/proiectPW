@@ -151,4 +151,4 @@ print 'Time elapsed: %.3f s\n' % (time() - start_time)
 print 'Calculating frequency from harmonic product spectrum:'
 start_time = time()
 # freq_from_HPS(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time() - start_time)
+print 'Time elapsed: %.3f s\n' % (time() - start_time) 

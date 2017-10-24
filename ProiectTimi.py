@@ -106,4 +106,4 @@ for it in freq2:
     if it <70 or it >5:
         #print it
         couter+=1
-#print couter 
+#print couter  

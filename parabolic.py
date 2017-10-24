@@ -32,7 +32,7 @@ def parabolic(f, x):
     return (xv, yv)
 
 
-def parabolic_polyfit(f, x, n):
+def parabolic_polyfit(f, x, n): 
     """Use the built-in polyfit() function to find the peak of a parabola
     
     f is a vector and x is an index for that vector.

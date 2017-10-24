@@ -4,7 +4,7 @@ import wave
 import numpy as np
 import matplotlib.pyplot as plt
 import struct
-chunk = 1024
+chunk = 2048
 def stereo_to_mono(hex1, hex2):
     """average two hex string samples"""
     return hex((ord(hex1) + ord(hex2))/2)
@@ -24,6 +24,8 @@ stream = p.open(format =
                 channels = wf.getnchannels(),
                 rate = RATE,
                 output = True)
+
+
 
 # read some data
 data = wf.readframes(chunk)
@@ -46,21 +48,23 @@ while len(data) == chunk*swidth:
     #print indata
     indata=indata*window
     plt.plot(indata)
-    #if counter>30:
-    #plt.show()
+    if counter>1:
+        plt.show()
     # Take the fft and square each value
-    w=abs(np.fft.fft(indata))
+    w=abs(np.fft.fft(indata))**2
     freqs = np.fft.fftfreq(len(w))
     
     idx = np.argmax(np.abs(w))
     freq = freqs[idx]
-    plt.plot(freqs*RATE,w)
+    
     #print idx
     freq_in_hertz = abs(freq * RATE)
     print(freq_in_hertz)
     frec.append([freq_in_hertz,data])
-    #if counter>30:
-    #plt.show()
+    plt.plot(freqs*RATE,w)
+    plt.xlim([0,2000])
+    if counter>1:
+        plt.show()
     # find the maximum
     '''
     which = fftData[1:].argmax() + 1
@@ -87,11 +91,12 @@ if data:
 pause()
 freq2=[]
 for it in frec:
-    if it[0] >70 and it[0]<500:
+    if it[0] >70 and it[0]<700:
         freq2.append(it)
 for it in freq2:
     print it[0]
     stream.write(it[1])
+    pause()
 stream.close()
 p.terminate()
 #print freq

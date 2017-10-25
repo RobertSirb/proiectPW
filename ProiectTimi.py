@@ -4,12 +4,13 @@ import wave
 import numpy as np
 import matplotlib.pyplot as plt
 import struct
-chunk = 2048
+chunk = 4096
+from FrequncyEstimator import freq_from_autocorr
 def stereo_to_mono(hex1, hex2):
     """average two hex string samples"""
     return hex((ord(hex1) + ord(hex2))/2)
 def pause():
-    programPause = raw_input("Press the <ENTER> key to continue...")
+    raw_input("Press the <ENTER> key to continue...")
 # open up a wave
 wf = wave.open('file.wav', 'rb')
 swidth = wf.getsampwidth()
@@ -44,6 +45,10 @@ while len(data) == chunk*swidth:
     #print data
     indata = np.array(wave.struct.unpack("%dh"%(len(data)/swidth),\
                                          data))
+    freq_in_hertz=freq_from_autocorr(indata, RATE) 
+    print '%f Hz' % freq_in_hertz
+    frec.append([freq_in_hertz,data])
+    '''
     #indata = np.array(data)
     #print indata
     indata=indata*window
@@ -66,7 +71,6 @@ while len(data) == chunk*swidth:
     if counter>1:
         plt.show()
     # find the maximum
-    '''
     which = fftData[1:].argmax() + 1
     # use quadratic interpolation around the max
     if which != len(fftData)-1:
@@ -91,7 +95,7 @@ if data:
 pause()
 freq2=[]
 for it in frec:
-    if it[0] >70 and it[0]<700:
+    if it[0] >70 and it[0]<450:
         freq2.append(it)
 for it in freq2:
     print it[0]

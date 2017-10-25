@@ -82,19 +82,19 @@ def freq_from_autocorr(sig, fs):
     #plt.xlim([0,2000])
     #plt.show()
     start = find(d > 0)[0]
-    print "start",start
+    #print "start",start
 
     # Find the next peak after the low point (other than 0 lag).  This bit is
     # not reliable for long signals, due to the desired peak occurring between
     # samples, and other peaks appearing higher.
     # Should use a weighting function to de-emphasize the peaks at longer lags.
     peak = argmax(corr[start:]) + start
-    print peak
+    #print peak
     #plt.plot(corr)
     #plt.xlim([0,2000])
     
     px, py = parabolic(corr, peak)
-    print fs,px,fs/px
+    #print fs,px,fs/px
     #plt.show()
     return fs / px
 

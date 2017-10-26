@@ -5,12 +5,13 @@ Created on Oct 24, 2017
 '''
 from __future__ import division
 from numpy.fft import rfft
-from numpy import argmax, mean, diff, log
+from numpy import argmax, mean, diff, log , zeros , uint8
 from matplotlib.mlab import find
 from scipy.signal import blackmanharris, fftconvolve
 from time import time
 import sys
 import matplotlib.pyplot as plt
+import PIL
 try:
     import soundfile as sf
 except ImportError:
@@ -124,31 +125,6 @@ def freq_from_HPS(sig, fs):
         subplot(maxharms, 1, x)
         plot(log(c))
     show()
-
-filename = "blueMic2.wav"
-
-print 'Reading file "%s"\n' % filename
-try:
-    signal, fs = sf.read(filename)
-except NameError:
-    signal, fs, enc = flacread(filename)
-
-print 'Calculating frequency from FFT:',
-start_time = time()
-print '%f Hz' % freq_from_fft(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time() - start_time)
-
-print 'Calculating frequency from zero crossings:',
-start_time = time()
-print '%f Hz' % freq_from_crossings(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time() - start_time)
-
-print 'Calculating frequency from autocorrelation:',
-start_time = time()
-print '%f Hz' % freq_from_autocorr(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time() - start_time)
-
-print 'Calculating frequency from harmonic product spectrum:'
-start_time = time()
-# freq_from_HPS(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time() - start_time) 
+a=zeros( (512,512,3), dtype=uint8)
+print a[256]
+print a[256,256]

@@ -4,6 +4,7 @@ import wave
 import numpy as np
 import matplotlib.pyplot as plt
 import struct
+from scipy import signal
 chunk = 4096
 from FrequncyEstimator import freq_from_autocorr
 def stereo_to_mono(hex1, hex2):
@@ -12,7 +13,7 @@ def stereo_to_mono(hex1, hex2):
 def pause():
     raw_input("Press the <ENTER> key to continue...")
 # open up a wave
-wf = wave.open('file.wav', 'rb')
+wf = wave.open('blueMic.wav', 'rb')
 swidth = wf.getsampwidth()
 RATE = wf.getframerate()
 print RATE
@@ -48,12 +49,25 @@ while len(data) == chunk*swidth:
     freq_in_hertz=freq_from_autocorr(indata, RATE) 
     print '%f Hz' % freq_in_hertz
     frec.append([freq_in_hertz,data])
+    if freq_in_hertz >169 and freq_in_hertz <180:
+        indata2=indata#*window
+        w=abs(np.fft.fft(indata2))
+        for it in range(169,180):
+            w[it]=0
+        y=np.fft.ifft(w)
+        plt.plot(indata)
+        plt.show()
+        plt.plot(y)
+        plt.show()
+        freq_in_hertz=freq_from_autocorr(y, RATE) 
+        print ' A doua frec %f Hz' % freq_in_hertz
+        pause()
     '''
     #indata = np.array(data)
     #print indata
     indata=indata*window
     plt.plot(indata)
-    if counter>1:
+    if counter>30:
         plt.show()
     # Take the fft and square each value
     w=abs(np.fft.fft(indata))**2
@@ -64,12 +78,13 @@ while len(data) == chunk*swidth:
     
     #print idx
     freq_in_hertz = abs(freq * RATE)
-    print(freq_in_hertz)
-    frec.append([freq_in_hertz,data])
+    print(freq_in_hertz) ,"fft"
+    #frec.append([freq_in_hertz,data])
     plt.plot(freqs*RATE,w)
     plt.xlim([0,2000])
-    if counter>1:
+    if counter>30:
         plt.show()
+    
     # find the maximum
     which = fftData[1:].argmax() + 1
     # use quadratic interpolation around the max

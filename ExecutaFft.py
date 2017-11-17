@@ -1,18 +1,50 @@
 '''
-Created on Oct 20, 2017
+Created on Nov 3, 2017
 
 @author: Pita
 '''
+import pyaudio
+import wave
+import numpy as np
 import matplotlib.pyplot as plt
-from scipy.fftpack import fft
-from scipy.io import wavfile # get the api
-fs, data = wavfile.read('bass.wav') # load the data
-#print data
-a = data.T[0] # this is a two channel soundtrack, I get the first track
-print a
-print len(a)
-b=[(ele/2**16.)*2-1 for ele in a] # this is 8-bit track, b is now normalized on [-1,1)
-c = fft(b) # calculate fourier transform (complex numbers list)
-d = len(c)/2  # you only need half of the fft list (real signal symmetry)
-plt.plot(abs(c[:(d-1)]),'r') 
-plt.show()
+import struct
+import math
+from scipy import signal
+from ObtineHash import obtineHash
+RANGE = [40 , 80 , 120 , 180 , 300]
+def getIndex(freq): 
+    i = 0
+    while RANGE[i] < freq:
+        i+=1
+    return i
+
+def deschideMelodie(melodie):
+    wf=wave.open(melodie, 'rb')
+    return wf
+def obtineFrecventeDominante(vectorFFT):
+    frecventeDominante=[0]*5
+    frecventeDominante=np.array(frecventeDominante)
+    for freq in range(40,300):
+        mag=abs(vectorFFT[freq])+1
+        index=getIndex(freq)
+        if(mag>frecventeDominante[index]):
+            frecventeDominante[index]=freq
+    return frecventeDominante
+def executaFFT(melodie):
+    chunk = 4096
+    wf = deschideMelodie(melodie)
+    swidth = wf.getsampwidth()
+    RATE = wf.getframerate()
+    data = wf.readframes(chunk)
+    frecventeMelodie=[]
+    while len(data) == chunk*swidth:
+        indata = np.array(wave.struct.unpack("%dh"%(len(data)/swidth),data))
+        
+        frecventeMelodie.append(obtineFrecventeDominante(np.fft.fft(indata)))
+        data = wf.readframes(chunk)
+    #test part
+    obtineHash(frecventeMelodie)
+    #end test part
+    return frecventeMelodie
+
+executaFFT(r'C:\Users\Pita\Desktop\New folder\REC_20171029_212348.wav')

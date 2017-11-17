@@ -12,7 +12,7 @@ formatFisier="wav"
 
 def obtineArgumente(melodie):
     argumente=["ffmpeg"]
-    """
+    argumente.append("-y")
     argumente.append("-i")
     argumente.append(melodie)
     argumente.append("-ac")
@@ -24,11 +24,10 @@ def obtineArgumente(melodie):
     argumente.append("-sample_fmt")
     argumente.append(formatMonstra)
     numeFisierIesire=melodie.split(".")[0]
-    numeFisierIesire+="."+formatFisier+'"'
+    numeFisierIesire+="."+formatFisier
     argumente.append(numeFisierIesire)
     return argumente , numeFisierIesire
-    """
-    return argumente,""
+
 def convertesteMelodie(melodie):
     argumente,numeFisierIesire=obtineArgumente(melodie)
     valoareReturnata=subprocess.call(argumente)
@@ -36,4 +35,4 @@ def convertesteMelodie(melodie):
         return -1 , "Nu pot converti melodia la formatul necesar!"
     return 0,numeFisierIesire
 
-convertesteMelodie('"C:\\Users\\Pita\\Desktop\\New folder\\REC_20171029_212348.m4a"')
+print convertesteMelodie('C:\\Users\\Pita\\Desktop\\New folder\\REC_20171029_212348.m4a')

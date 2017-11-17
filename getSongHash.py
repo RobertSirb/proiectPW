@@ -44,7 +44,9 @@ songHash=[]
 #for it in range(len(testSongData)/605):
     #songHash.append(main("bucata",testSongData[605*it:605*it+605]))
 print main("temporar.jpeg",testSongData)
-testSongData[2374]=0.0
+#testSongData[2374]=0.0
+for it in range(len(testSongData)):
+    testSongData[it]=testSongData[it] * ((2.0**(1.0/12.0))**6.0)
 print main("temporar2.jpeg",testSongData)
 print prime(350)
 f1.close()

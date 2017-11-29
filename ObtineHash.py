@@ -7,7 +7,9 @@ from __future__ import absolute_import
 import numpy
 from  PIL import Image
 import imagehash
-
+import random
+import ObtineListaMelodii
+import cioran
 lungimeBucataMelodie=64 # ~ 6 sec de cantec
 radicalLBM=8
 numarIntervaluri=5
@@ -43,4 +45,12 @@ def obtineHash(frecvente):
     imaginiCantec=obtineImagineDinFrecvente(frecvente)
     listaHashuri = obtineHashDinImagini(imaginiCantec)
     print listaHashuri
+    #start of test part
+    lista2=[]
+    for it in listaHashuri:
+        lista2.append(it+random.randrange(0,10000000000000000))
+    print lista2
+    #ObtineListaMelodii.obtineListaMelodii(listaHashuri,lista2)
+    cioran.test(listaHashuri,lista2)
+    #end of test part
     return listaHashuri
